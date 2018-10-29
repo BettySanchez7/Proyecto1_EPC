@@ -299,7 +299,7 @@ def LDX(valor,tag,op_name):
         ##========================MNEMONICOS PARA LAS FUNCIONES================================##
         ##==========================PARTICULARES DEL MC68HC11==================================##
         ##=====================================================================================##
-mnemonico={
+mnemonico=mnemonico={
 'ABA':NOP,'ABX':NOP,'ABY':NOP, 'ADCA':LDX,'ADCB':LDX,'ADDA':LDX,'ADDB':LDX,'ADDD':LDX,'ANDA':LDX,
 'ANDB':LDX,'ASL':LDX,'ASLA':NOP, 'ASLB':NOP,'ASLD':NOP,'ASR':LDX,'ASRA':NOP,'ASRB':NOP,'BCC':BNE,
 'BCLR':BRCLR, 'BCS':BNE, 'BEQ':BNE,'BGE':BNE,'BGT':BNE,'BHI':BNE,'BHS':BNE,'BITA':LDX,'BITB':LDX,
@@ -316,7 +316,25 @@ mnemonico={
 'RTS':NOP,'SBA':NOP, 'SBCA':LDX, 'SBCB':LDX, 'SEC':NOP,'SEI':NOP,'SEV':NOP,'STAA':LDX,'STAB':LDX,
 'STD':LDX,'STOP':NOP,'STS':LDX,'STX':LDX, 'STY':LDX, 'SUBA':LDX, 'SUBB':LDX,'SUBD':LDX,'SWI':NOP,
 'TAB':NOP, 'TAP':NOP,'TBA':NOP,'TETS':NOP,'TPA':NOP,'TST':LDX, 'TSTA':NOP, 'TSTB':NOP, 'TSX':NOP,
-'TSY':NOP,'TXS':NOP,'TYS':NOP,'WAI':NOP,'XGDX':NOP,'XGDY':NOP}
+'TSY':NOP,'TXS':NOP,'TYS':NOP,'WAI':NOP,'XGDX':NOP,'XGDY':NOP,
+'aba':NOP,'abx':NOP,'aby':NOP, 'adca':LDX,'adcb':LDX,'adda':LDX,'addb':LDX,'addd':LDX,'anda':LDX,
+'andb':LDX,'asl':LDX,'asla':NOP, 'aslb':NOP,'asld':NOP,'asr':LDX,'asra':NOP,'asrb':NOP,'bcc':BNE,
+'bclr':BRCLR, 'bcs':BNE, 'beq':BNE,'bge':BNE,'bgt':BNE,'bhi':BNE,'bhs':BNE,'bita':LDX,'bitb':LDX,
+'ble':BNE,'blo':BNE, 'bls':BNE, 'blt':BNE, 'bmi':BNE,'BNE':BNE,'bpl':BNE,'bra':BNE,'BRCLR':BRCLR,
+'brn':BNE,'brset':BRCLR,'bset':BRCLR,'bsr':BNE,'bvc':BNE,'bvs':BNE,'cba':NOP,'clc':NOP,'cli':NOP,
+'clr':LDX,'clra':NOP,'clrb':NOP,'clv':NOP, 'cmpa':LDX,'cmpb':LDX,'com':LDX,'coma':NOP,'comb':NOP,
+'cpd':LDX,'cpx':LDX,'cpy':LDX,'daa':NOP, 'dec':LDX, 'deca':NOP, 'decb':NOP, 'des':NOP, 'dex':NOP,
+'dey':NOP,'end':END,'eora':LDX,'eorb':LDX,'equ':EQU,'fcb':FCB, 'fdiv':NOP, 'idiv':NOP, 'inc':LDX,
+'inca':NOP,'incb':NOP,'ins':NOP,'inx':NOP, 'iny':NOP, 'jmp':JMP, 'jsr':JMP,'ldaa':LDX,'ldab':LDX,
+'ldd':LDX, 'lds':LDX, 'LDX':LDX, 'ldy':LDX, 'lsl':LDX,'lsla':NOP,'lslb':NOP,'lsld':NOP,'lsr':LDX,
+'lsra':NOP, 'lsrb':NOP,'lsrd':NOP,'mul':NOP,'neg':LDX,'nega':NOP,'negb':LDX,'NOP':NOP,'oraa':LDX,
+'orab':LDX, 'org':INICIO, 'psha':NOP, 'pshb':NOP, 'pshx':NOP, 'pshy':NOP, 'pula':NOP, 'pulb':NOP,
+'pulx':NOP, 'puly':NOP,'rol':LDX,'rola':NOP,'rolb':NOP,'ror':LDX,'rora':NOP,'rorb':NOP,'rti':NOP,
+'rts':NOP,'sba':NOP, 'sbca':LDX, 'sbcb':LDX, 'sec':NOP,'sei':NOP,'sev':NOP,'staa':LDX,'stab':LDX,
+'std':LDX,'stop':NOP,'sts':LDX,'stx':LDX, 'sty':LDX, 'suba':LDX, 'subb':LDX,'subd':LDX,'swi':NOP,
+'tab':NOP, 'tap':NOP,'tba':NOP,'tets':NOP,'tpa':NOP,'tst':LDX, 'tsta':NOP, 'tstb':NOP, 'tsx':NOP,
+'tsy':NOP,'txs':NOP,'tys':NOP,'wai':NOP,'xgdx':NOP,'xgdy':NOP
+}
 
 #programa = Program(input('introduce tu Archivo con la extensión .asc): '))
 def compila1():
@@ -341,7 +359,7 @@ botonCompila=Button(ventana,text="Compilar",font=("Agency FB",10),command=compil
 botonCompila.grid(padx=50,pady=150)
 ventana.mainloop()
 programa=1
-programa=(compila1())
+programa=Program(compila1())
 
 try:
     file = open(programa.name,"r")
@@ -380,6 +398,8 @@ for linea in file:
          
             if linea[1] == 'FCB':
                 mnemonico[linea[1]](linea[2])
+            elif linea[1] == 'fcb':
+                mnemonico[linea[1]](linea[2])
             else:
                 mnemonico[linea[1]](linea[2], linea[0],linea[1])
         elif len(linea) == 2:
@@ -387,6 +407,8 @@ for linea in file:
                 if linea[1] in programa.etiqueta:
                     mnemonico[linea[0]]("no_valor", linea[1],linea[0])
                 elif linea[0] == 'FCB':
+                    mnemonico[linea[0]](linea[1])
+                elif linea[0] == 'fcb':
                     mnemonico[linea[0]](linea[1])
                 else:
                     mnemonico[linea[0]](linea[1], "sin_etiqueta",linea[0])

@@ -43,9 +43,9 @@
 43  :       001C        :BASE_L   EQU     $001C
 44  :       001D        :V3       EQU     $001D
 45  :       001E        :V4       EQU     $001E
-46  :       8000        :         ORG     $8000
+46  :       8000        :         org     $8000
 47  :8000   (8E00FF)    :         LDS     #$00FF
-48  :8003   (8600)      :         LDAA    #$00
+48  :8003   (8600)      :         ldaa    #$00
 49  :8005   (B71001)    :         STAA    DDRA
 50  :8008   (86FF)      :         LDAA    #$FF
 51  :800A   (B71003)    :         STAA    DDRG
@@ -358,7 +358,7 @@
 358 :F12B   (38)        :         PULX
 359 :F12C   (3B)        :         RTI
 360 :       FFD6        :         ORG     $FFD6
-361 :FFD6   (F100 )    :         FCB     $F1,$00
+361 :FFD6   (F100 )    :         fcb     $F1,$00
 362 :       FFF0        :         ORG     $FFF0
 363 :FFF0   (F110 )    :         FCB     $F1,$10
 364 :       FFFE        :         ORG     $FFFE
