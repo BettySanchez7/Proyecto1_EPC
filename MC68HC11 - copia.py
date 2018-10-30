@@ -1,6 +1,7 @@
 from LeerArchivos import *
 from string import hexdigits
 from tkinter import *
+from tkinter import messagebox
 from tkinter.filedialog import *
 
     ##=====================================================##
@@ -214,7 +215,7 @@ def salto_Relativo(X,Y):                                        #hace saltos val
     return salto_R
 
 ########Duda sobre el parametro que llega como firstpace y con los otros variables dentro de la funcion: first_space
-def ajuste_De_Linea(lista,firstspace):                              #aquí se ajustan los colores de la impresión
+def ajuste_De_Linea(lista,first_space):                              #aquí se ajustan los colores de la impresión
     if len(lista)==3 and first_space:                            
         f_linea = ''.ljust(9)+lista[0].ljust(8)+lista[1].ljust(15)+lista[2]
     elif len(lista) == 3:
@@ -336,37 +337,45 @@ mnemonico=mnemonico={
 'tsy':NOP,'txs':NOP,'tys':NOP,'wai':NOP,'xgdx':NOP,'xgdy':NOP
 }
 
-#programa = Program(input('introduce tu Archivo con la extensión .asc): '))
-def compila1():
-   
-   return entrada.get()
-
 
 
         ##=====================================================##
         ##===============FUNCIONES DEL PROGRAMA================##
         ##=====================================================##
 
-##Esto le toca a CECI
-ventana=Tk()
+#Ventana
+window=Tk()
+window.title("MC68HC11")
+window.geometry('400x230')
+window.configure(background='gray77')
+#Contenido
+welcome=Label(window,text="        BIENVENIDO          ",font=("Arial Bold", 20),background='gray77').place(x=90,y=5)
+welcome=Label(window,text="    AL COMPILADOR     ",font=("Arial Bold", 20),background='gray77').place(x=90,y=45)
+Etiqueta1= Label(window,text="1.-Ingrese el nombre del archivo con extensión *.ASC",font=("Agency FB",10),background='gray77').place(x=5,y=100)
+Etiqueta2=Label(window,text="2.-Presione el boton Complilar",font=("Agency FB",10),background='gray77').place(x=5,y=130)
+imagen=PhotoImage(file="MC68HC11_logo.png")
+fondo=Label(window,image=imagen).place(x=0,y=0)
 entrada=StringVar()
-welcome= Label(ventana,text=" BIENVENIDO AL COMPILADOR DEL MC68HC11 ",font=("Agency FB",14)).place(x=30,y=20)
-Etiqueta= Label(ventana,text="1.-Ingrese el nombre del archivo a compilar(extensión *.asc)\n2.-Presione el boton Complilar\n3.-Finalmente cierre la ventana.",font=("Agency FB",10)).place(x=0,y=70)
-Caja=Entry(ventana,textvariable=entrada).place(x=250,y=150)
-ventana.title('COMPILADOR MC68HC11')
-ventana.geometry("500x300")
-botonCompila=Button(ventana,text="Compilar",font=("Agency FB",10),command=compila1)  
-botonCompila.grid(padx=50,pady=150)
-ventana.mainloop()
-programa=1
-programa=Program(compila1())
+txt = Entry(window,width=30,textvariable=entrada)
+txt.place(x=170,y=174)
+def clicked():
+    if (entrada.get()).endswith(".ASC"):
+        messagebox.showinfo('Exito','Cierre el programa para continuar')
+        return entrada.get()
+    else:
+        messagebox.showinfo('Error','Archivo no valido\nDebe ser de tipo *.ASC')
+btn = Button(window,text='Complilar', command=clicked, width=15)
+btn.place(x=40,y=170)
+window.mainloop() #Todo lo de arriba se va a ejecutar hasta que se cierre 
+programa = 1
+programa=Program(clicked())
 
 try:
     file = open(programa.name,"r")
     f = open(programa.name.replace('.ASC','.lst'), "w")
     h = open(programa.name.replace('.ASC','.hex'), "w")
-except:
-    print('\tERROR 404 ARCHIVO NOT FOUND, NO SE ENCONTRO EL ARCHIVO, ¡HASTA LUEGO!')
+except:  
+    messagebox.showinfo('Error','ERROR 404 ARCHIVO NOT FOUND\nNO SE ENCONTRO EL ARCHIVO, ¡HASTA LUEGO!')
     exit(-1)
         
 #--lee linea por linea 
