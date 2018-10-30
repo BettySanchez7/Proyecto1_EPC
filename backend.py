@@ -320,7 +320,7 @@ mnemonico=mnemonico={
 'aba':NOP,'abx':NOP,'aby':NOP, 'adca':LDX,'adcb':LDX,'adda':LDX,'addb':LDX,'addd':LDX,'anda':LDX,
 'andb':LDX,'asl':LDX,'asla':NOP, 'aslb':NOP,'asld':NOP,'asr':LDX,'asra':NOP,'asrb':NOP,'bcc':BNE,
 'bclr':BRCLR, 'bcs':BNE, 'beq':BNE,'bge':BNE,'bgt':BNE,'bhi':BNE,'bhs':BNE,'bita':LDX,'bitb':LDX,
-'ble':BNE,'blo':BNE, 'bls':BNE, 'blt':BNE, 'bmi':BNE,'bne':BNE,'bpl':BNE,'bra':BNE,'BRCLR':BRCLR,
+'ble':BNE,'blo':BNE, 'bls':BNE, 'blt':BNE, 'bmi':BNE,'BNE':BNE,'bpl':BNE,'bra':BNE,'BRCLR':BRCLR,
 'brn':BNE,'brset':BRCLR,'bset':BRCLR,'bsr':BNE,'bvc':BNE,'bvs':BNE,'cba':NOP,'clc':NOP,'cli':NOP,
 'clr':LDX,'clra':NOP,'clrb':NOP,'clv':NOP, 'cmpa':LDX,'cmpb':LDX,'com':LDX,'coma':NOP,'comb':NOP,
 'cpd':LDX,'cpx':LDX,'cpy':LDX,'daa':NOP, 'dec':LDX, 'deca':NOP, 'decb':NOP, 'des':NOP, 'dex':NOP,
@@ -396,7 +396,7 @@ for linea in file:
             if linea[1] not in mnemonico:
                 raise Errores(3,programa.total_lineas,linea[1])
          
-            if linea[1] == 'FCB':
+            if linea[1] == ('FCB'):
                 mnemonico[linea[1]](linea[2])
             elif linea[1] == 'fcb':
                 mnemonico[linea[1]](linea[2])
@@ -406,7 +406,7 @@ for linea in file:
             if linea[0] in mnemonico:
                 if linea[1] in programa.etiqueta:
                     mnemonico[linea[0]]("no_valor", linea[1],linea[0])
-                elif linea[0] == 'FCB':
+                elif linea[0] == ('FCB'):
                     mnemonico[linea[0]](linea[1])
                 elif linea[0] == 'fcb':
                     mnemonico[linea[0]](linea[1])

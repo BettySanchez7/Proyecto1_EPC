@@ -76,11 +76,11 @@
 76  :803E   (813F)      :         CMPA    #'?
 77  :8040   (27FA)      :         BEQ     CICLO
 78  :8042   (D60E)      :         LDAB    U1
-79  :8044   (2609)      :         BNE     CHECA_U2
+79  :8044   (2609)      :         bne     CHECA_U2
 80  :8046   (8173)      :         CMPA    #'s
 81  :8048   (26EE)      :         BNE     OTRO
 82  :804A   (970E)      :         STAA    U1
-83  :804C   (7E8038)    :         JMP     OTRO
+83  :804C   (7E8038)    :         jmp     OTRO
 84  :804F               :CHECA_U2
 85  :804F   (D60F)      :         LDAB    U2
 86  :8051   (2612)      :         BNE     CHECA_U3
