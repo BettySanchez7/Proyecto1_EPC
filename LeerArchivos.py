@@ -10,14 +10,7 @@ archivo_excel = pd.read_excel('INSTRUCCIONES.xls')
 
 mnemonico_m = archivo_excel['MNEMONICO'].values
 ###Obtener valores de opcodes
-especiales = {
 
-              'BCLR':['15','1D','181D'],
-              'BRCLR':['13','1F','181F'],
-              'BRSET':['12','1E','181E'],
-              'BSET':['14','1C','181C'],
-
-              }
 IMM= archivo_excel['OPCODE1'].values
 DIR= archivo_excel['OPCODE2'].values
 INDX= archivo_excel['OPCODE3'].values
@@ -52,6 +45,14 @@ for mnemo in mnemonico_m:
       if REL[i]!='x':
             valuesREL.update({mnemo:str(REL[i])})          
       i=i+1
+particular = {
+
+              'BCLR':['15','1D','181D'],
+              'BRCLR':['13','1F','181F'],
+              'BRSET':['12','1E','181E'],
+              'BSET':['14','1C','181C'],
+
+              }
 #print(valuesEXT)
 #print(len(mnemonico_m))
 #print(len(valuesREL))

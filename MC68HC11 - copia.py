@@ -6,7 +6,7 @@ from tkinter.filedialog import *
 
     ##=====================================================##
     ##===============CLASES DEL PROGRAMA===================##
-    ##=====================================================##
+    
 
 
 ###El fist_espace es el que determina como leer el archivo, es decir que lineas tomar o no para el analisis, las que 
@@ -70,11 +70,11 @@ def BRCLR(valor,tag,op_name):
     mnem_extra = 0
     if 'X' in valor or 'Y' in valor:
         if 'X' in valor:
-            valor = especiales[op_name][1]+clr_valor(valor)
+            valor = particular[op_name][1]+clr_valor(valor)
         else:
-            valor = especiales[op_name][2]+clr_valor(valor)
+            valor = particular[op_name][2]+clr_valor(valor)
     else:
-        valor = especiales[op_name][0]+clr_valor(valor)
+        valor = particular[op_name][0]+clr_valor(valor)
     programa.memoria.append(valor)                               #agregamos el valor de BRCLR a la lista 
     programa.memory_posicion += int(len(programa.memoria[-1])/2)
     if tag in programa.etiqueta:
@@ -150,10 +150,11 @@ def NOP(valor, tag,op_name):
         ##=====================================================##
         ##===============FUNCIONES DEL PROGRAMA================##
         ##=====================================================##
+
 def INICIO(inicia_memoria_org,tag,op_name):                          # valor que toma ORG en memoria
     if not programa.comienzo:
         programa.start_memory = clr_valor(inicia_memoria_org)      #inicio programa Memoria en base hexadecimal
-        programa.memory_posicion = int(programa.start_memory,16)
+        programa.memory_posicion = int(programa.start_memory,16) #Nos devuelve al valor del inicio del programa en entero
         programa.comienzo = True
     verifica_longitud(programa.start_memory, 2)
     auxiliar = int(clr_valor(inicia_memoria_org), 16)
@@ -214,7 +215,7 @@ def salto_Relativo(X,Y):                                        #hace saltos val
         salto_R = '0'+salto_R
     return salto_R
 
-########Duda sobre el parametro que llega como firstpace y con los otros variables dentro de la funcion: first_space
+
 def ajuste_De_Linea(lista,first_space):                              #aquí se ajustan los colores de la impresión
     if len(lista)==3 and first_space:                            
         f_linea = ''.ljust(9)+lista[0].ljust(8)+lista[1].ljust(15)+lista[2]
@@ -229,23 +230,16 @@ def ajuste_De_Linea(lista,first_space):                              #aquí se a
     else:
         f_linea = lista[0]
     return f_linea
-
+##Esta función regresa la linea sin los comentarios
 def quita_comentarios(linea):
     linea = linea.split()                                       #split separa las palabras que encuentra en una linea
     for item in linea:
         if '*' in item:
             for x in range(len(linea)-1,linea.index(item)-1,-1): #recorre la linea en un intervalo de inicio hasta el comentario
                 linea.pop(x)                                     #pop() Devuelve el ultimo valor de la linea
-    return linea                                               #regresa la linea sin los comentarios
+    return linea                                               
 
-###########################################
-def quita_comentarios2(linea):########################
-    linea = linea.split()                                       #split separa las palabras que encuentra en una linea
-    for item in linea:
-        if '*' in item:
-            for x in range(linea.index(item)-1,len(linea)-1,1): #recorre la linea en un intervalo de inicio hasta el comentario
-                linea.pop(x)                                     #pop() Devuelve el ultimo valor de la linea
-    return total_lineas           #Quiero que devuleva los comentarios de cada linea
+
 
 
         ##======================================================================================##
@@ -257,8 +251,8 @@ def quita_comentarios2(linea):########################
 def LDX(valor,tag,op_name):                                       
     if clr_valor(valor) in programa.var:                      
         if '#' in valor:
-            programa.memoria.append(valuesIMM[op_name]+programa.var[clr_valor(valor)])
-        elif len(programa.var[clr_valor(valor)])==2 and op_name in valuesDIR:                  #elif= else if
+            programa.memoria.append(valuesIMM[op_name]+programa.var[clr_valor(valor)]) #Se manda 
+        elif len(programa.var[clr_valor(valor)])==2 and op_name in valuesDIR:                  
             programa.memoria.append(valuesDIR[op_name]+programa.var[clr_valor(valor)])
         elif len(programa.var[clr_valor(valor)])==4:
             programa.memoria.append(valuesEXT[op_name]+programa.var[clr_valor(valor)])
@@ -300,7 +294,7 @@ def LDX(valor,tag,op_name):
         ##========================MNEMONICOS PARA LAS FUNCIONES================================##
         ##==========================PARTICULARES DEL MC68HC11==================================##
         ##=====================================================================================##
-mnemonico=mnemonico={
+mnemonico = {
 'ABA':NOP,'ABX':NOP,'ABY':NOP, 'ADCA':LDX,'ADCB':LDX,'ADDA':LDX,'ADDB':LDX,'ADDD':LDX,'ANDA':LDX,
 'ANDB':LDX,'ASL':LDX,'ASLA':NOP, 'ASLB':NOP,'ASLD':NOP,'ASR':LDX,'ASRA':NOP,'ASRB':NOP,'BCC':BNE,
 'BCLR':BRCLR, 'BCS':BNE, 'BEQ':BNE,'BGE':BNE,'BGT':BNE,'BHI':BNE,'BHS':BNE,'BITA':LDX,'BITB':LDX,
@@ -393,11 +387,11 @@ for linea in file:
       
     try:
         if len(linea)>=2:
-            if linea[0] in especiales or linea[1] in especiales:
+            if linea[0] in particular or linea[1] in particular:
                 if linea[0] in mnemonico:
                     mnemonico[linea[0]](linea[1],linea[2] if len(linea) == 3 else "sin_etiqueta",linea[0])
                 else:
-                    raise Errores(3,programa.total_lineas,linea[0] if linea[0] in especiales else linea[1])
+                    raise Errores(3,programa.total_lineas,linea[0] if linea[0] in particular else linea[1])
                 linea = ''
           
 
@@ -552,6 +546,7 @@ for key in sorted(symbol_table):
 
 bullet = 0
 posicion = 1
+#Para darle formato al archivo .hex
 for item in programa.memoria:
     if item in programa.org_memoria:
         posicion = 1
@@ -577,7 +572,7 @@ f.close()
 h.close()
 file.close()
 
-#--Genera el archivo .ls 
+#--Genera el archivo .lst 
 #--Genera el archivo .hex 
 print('\n\t Archivo lst ' +programa.name.replace('.ASC','.lst')+' creado correctamente')  
 print('\n\t Archivo hex ' +programa.name.replace('.ASC','.hex')+' creado correctamente')  
