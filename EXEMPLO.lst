@@ -1,0 +1,453 @@
+1   :       1026        :PACTL    EQU     $1026
+2   :       1027        :PACNT    EQU     $1027
+3   :       1030        :ADCTL    EQU     $1030
+4   :       1031        :ADR1     EQU     $1031
+5   :       1032        :ADR2     EQU     $1032
+6   :       1033        :ADR3     EQU     $1033
+7   :       1034        :ADR4     EQU     $1034
+8   :       1039        :OPTION   EQU     $1039
+9   :       1000        :PORTA    EQU     $1000
+10  :       1008        :PORTD    EQU     $1008
+11  :       100A        :PORTE    EQU     $100A
+12  :       1002        :PORTG    EQU     $1002
+13  :       1001        :DDRA     EQU     $1001
+14  :       1009        :DDRD     EQU     $1009
+15  :       1003        :DDRG     EQU     $1003
+16  :       1024        :TMSK2    EQU     $1024
+17  :       1025        :TFLG2    EQU     $1025
+18  :       102F        :SCDR     EQU     $102F
+19  :       102D        :SCCR2    EQU     $102D
+20  :       102E        :SCSR     EQU     $102E
+21  :       102C        :SCCR1    EQU     $102C
+22  :       102B        :BAUD     EQU     $102B
+23  :       103C        :HPRIO    EQU     $103C
+24  :       1028        :SPCR     EQU     $1028
+25  :       105D        :CSCTL    EQU     $105D
+26  :       1038        :OPT2     EQU     $1038
+27  :       000C        :ORDEN    EQU     $000C
+28  :       000D        :SEG      EQU     $000D
+29  :       000E        :U1       EQU     $000E
+30  :       000F        :U2       EQU     $000F
+31  :       0010        :U3       EQU     $0010
+32  :       0011        :U4       EQU     $0011
+33  :       0012        :U5       EQU     $0012
+34  :       0013        :V1       EQU     $0013
+35  :       0014        :V2       EQU     $0014
+36  :       0015        :BAS_H    EQU     $0015
+37  :       0016        :BAS_L    EQU     $0016
+38  :       0017        :V5       EQU     $0017
+39  :       0018        :TEMPO    EQU     $0018
+40  :       0019        :ALTO     EQU     $0019
+41  :       001A        :BAJO     EQU     $001A
+42  :       001B        :BASE_H   EQU     $001B
+43  :       001C        :BASE_L   EQU     $001C
+44  :       001D        :V3       EQU     $001D
+45  :       001E        :V4       EQU     $001E
+46  :       8000        :         org     $8000
+47  :8000   (8E00FF)    :         LDS     #$00FF
+48  :8003   (860000)    :         ldaa    #$0
+49  :8006   (B71001)    :         STAA    DDRA
+50  :8009   (86FF)      :         LDAA    #$FF
+51  :800B   (B71003)    :         STAA    DDRG
+52  :800E   (8600)      :         LDAA    #$00
+53  :8010   (B71002)    :         STAA    PORTG
+54  :8013   (CC302C)    :         LDD     #$302C
+55  :8016   (B7102B)    :         STAA    BAUD
+56  :8019   (F7102D)    :         STAB    SCCR2
+57  :801C   (8600)      :         LDAA    #$00
+58  :801E   (B7102C)    :         STAA    SCCR1
+59  :8021   (86FE)      :         LDAA    #$FE
+60  :8023   (B71009)    :         STAA    DDRD
+61  :8026   (8604)      :         LDAA    #$04
+62  :8028   (B7103C)    :         STAA    HPRIO
+63  :802B   (8600)      :         LDAA    #$00
+64  :802D   (06)        :         TAP
+65  :802E               :MAIN
+66  :802E   (BD80BC)    :         JSR     INICIA
+67  :8031   (7F11)      :INICIO   CLR     U4
+68  :8033   (7F10)      :NO_S1    CLR     U3
+69  :8035   (7F0F)      :NO_S     CLR     U2
+70  :8037   (7F0E)      :         CLR     U1
+71  :8039               :OTRO
+72  :8039   (863F)      :         LDAA    #'?
+73  :803B   (970C)      :         STAA    ORDEN
+74  :803D               :CICLO
+75  :803D   (960C)      :         LDAA    ORDEN
+76  :803F   (813F)      :         CMPA    #'?
+77  :8041   (27FA)      :         BEQ     CICLO
+78  :8043   (D60E)      :         LDAB    U1
+79  :8045   (2609)      :         bne     CHECA_U2
+80  :8047   (8173)      :         CMPA    #'s
+81  :8049   (26EE)      :         BNE     OTRO
+82  :804B   (970E)      :         STAA    U1
+83  :804D   (7E8039)    :         jmp     OTRO
+84  :8050               :CHECA_U2
+85  :8050   (D60F)      :         LDAB    U2
+86  :8052   (2612)      :         BNE     CHECA_U3
+87  :8054   (8154)      :         CMPA    #'T
+88  :8056   (2709)      :         BEQ     ES_T
+89  :8058   (8153)      :         CMPA    #'S
+90  :805A   (27DD)      :         BEQ     OTRO
+91  :805C   (7F0E)      :         CLR     U1
+92  :805E   (7E8039)    :         JMP     OTRO
+93  :8061   (970F)      :ES_T     STAA    U2
+94  :8063   (7E8039)    :         JMP     OTRO
+95  :8066               :CHECA_U3
+96  :8066   (D610)      :         LDAB    U3
+97  :8068   (2612)      :         BNE     CHECA_U4
+98  :806A   (8141)      :         CMPA    #'A
+99  :806C   (2709)      :         BEQ     ES_A
+100 :806E   (8153)      :         CMPA    #'S
+101 :8070   (26C3)      :         BNE     NO_S
+102 :8072   (7F0F)      :         CLR     U2
+103 :8074   (7E8039)    :         JMP     OTRO
+104 :8077               :ES_A
+105 :8077   (9710)      :         STAA    U3
+106 :8079   (7E8039)    :         JMP     OTRO
+107 :807C               :CHECA_U4
+108 :807C   (D611)      :         LDAB    U4
+109 :807E   (2614)      :         BNE     CHECA_T
+110 :8080   (8152)      :         CMPA    #'R
+111 :8082   (270B)      :         BEQ     ES_R
+112 :8084   (8153)      :         CMPA    #'S
+113 :8086   (26AB)      :         BNE     NO_S1
+114 :8088   (7F10)      :         CLR     U3
+115 :808A   (7F0F)      :         CLR     U2
+116 :808C   (7E8039)    :         JMP     OTRO
+117 :808F               :ES_R
+118 :808F   (9711)      :         STAA    U4
+119 :8091   (7E8039)    :         JMP     OTRO
+120 :8094               :CHECA_T
+121 :8094   (8154)      :         CMPA    #'T
+122 :8096   (270D)      :         BEQ     EXITO
+123 :8098   (8153)      :         CMPA    #'S
+124 :809A   (2695)      :         BNE     INICIO
+125 :809C   (7F11)      :         CLR     U4
+126 :809E   (7F10)      :         CLR     U3
+127 :80A0   (7F0F)      :         CLR     U2
+128 :80A2   (7E8039)    :         JMP     OTRO
+129 :80A5               :EXITO
+130 :80A5   (8645)      :         LDAA    #'E
+131 :80A7   (9719)      :         STAA    ALTO
+132 :80A9   (8658)      :         LDAA    #'X
+133 :80AB   (971A)      :         STAA    BAJO
+134 :80AD   (8649)      :         LDAA    #'I
+135 :80AF   (971B)      :         STAA    BASE_H
+136 :80B1   (8654)      :         LDAA    #'T
+137 :80B3   (971C)      :         STAA    BASE_L
+138 :80B5   (864F)      :         LDAA    #'O
+139 :80B7   (971D)      :         STAA    V3
+140 :80B9   (7E802E)    :         JMP     MAIN
+141 :80BC               :INICIA
+142 :80BC   (7F0D)      :         CLR     SEG
+143 :80BE   (7F1002)    :         CLR     PORTG
+144 :80C1   (86F4)      :         LDAA    #$F4
+145 :80C3   (9718)      :         STAA    TEMPO
+146 :80C5   (CE1024)    :         LDX     #TMSK2
+147 :80C8   (1C0040)    :         BSET    $00,X,#$40
+148 :80CB   (0E)        :         CLI
+149 :80CC   (CE1026)    :         LDX     #PACTL
+150 :80CF   (1C0050)    :         BSET    $00,X,#$50
+151 :80D2   (7F1027)    :         CLR     PACNT
+152 :80D5   (8610)      :         LDAA    #$10
+153 :80D7   (971B)      :         STAA    BASE_H
+154 :80D9   (8660)      :         LDAA    #$60
+155 :80DB   (971C)      :         STAA    BASE_L
+156 :80DD   (18CE1060)  :         LDY     #$1060
+157 :80E1   (8616)      :         LDAA    #$16
+158 :80E3   (9715)      :         STAA    BAS_H
+159 :80E5   (8653)      :         LDAA    #$53
+160 :80E7   (9716)      :         STAA    BAS_L
+161 :80E9   (7F19)      :         CLR     ALTO
+162 :80EB   (7F1A)      :         CLR     BAJO
+163 :80ED   (39)        :         RTS
+164 :80EE               :SACA
+165 :80EE   (9619)      :         LDAA    ALTO
+166 :80F0   (D61A)      :         LDAB    BAJO
+167 :80F2   (188F)      :         XGDY
+168 :80F4   (1808)      :         INY
+169 :80F6   (188F)      :         XGDY
+170 :80F8   (BD8234)    :         JSR     BINBCD
+171 :80FB   (BD8169)    :         JSR     DISPLAY
+172 :80FE   (BD8159)    :         JSR     COMA
+173 :8101   (961B)      :         LDAA    BASE_H
+174 :8103   (D61C)      :         LDAB    BASE_L
+175 :8105   (188F)      :         XGDY
+176 :8107   (1808)      :         INY
+177 :8109   (4F)        :         CLRA
+178 :810A   (18E600)    :         LDAB    $00,Y
+179 :810D   (BD8244)    :         JSR     BNBCD
+180 :8110   (BD8188)    :         JSR     DSPLY
+181 :8113   (BD8159)    :         JSR     COMA
+182 :8116   (1808)      :         INY
+183 :8118   (4F)        :         CLRA
+184 :8119   (18E600)    :         LDAB    $00,Y
+185 :811C   (BD8244)    :         JSR     BNBCD
+186 :811F   (BD8188)    :         JSR     DSPLY
+187 :8122   (BD8159)    :         JSR     COMA
+188 :8125   (1808)      :         INY
+189 :8127   (4F)        :         CLRA
+190 :8128   (18E600)    :         LDAB    $00,Y
+191 :812B   (BD8244)    :         JSR     BNBCD
+192 :812E   (BD8188)    :         JSR     DSPLY
+193 :8131   (BD8159)    :         JSR     COMA
+194 :8134   (1808)      :         INY
+195 :8136   (4F)        :         CLRA
+196 :8137   (18E600)    :         LDAB    $00,Y
+197 :813A   (BD8244)    :         JSR     BNBCD
+198 :813D   (BD8188)    :         JSR     DSPLY
+199 :8140   (BD8159)    :         JSR     COMA
+200 :8143   (1808)      :         INY
+201 :8145   (4F)        :         CLRA
+202 :8146   (18E600)    :         LDAB    $00,Y
+203 :8149   (BD8244)    :         JSR     BNBCD
+204 :814C   (BD8188)    :         JSR     DSPLY
+205 :814F   (188F)      :         XGDY
+206 :8151   (971B)      :         STAA    BASE_H
+207 :8153   (D71C)      :         STAB    BASE_L
+208 :8155   (BD81B6)    :         JSR     CRYTRN
+209 :8158   (39)        :         RTS
+210 :8159               :COMA
+211 :8159   (CE102E)    :         LDX     #SCSR
+212 :815C   (B6102E)    :         LDAA    SCSR
+213 :815F   (862C)      :         LDAA    #$2C
+214 :8161   (B7102F)    :         STAA    SCDR
+215 :8164               :C1
+216 :8164   (1F0080FC)  :         BRCLR   $00,X,#$80     C1
+217 :8168   (39)        :         RTS
+218 :8169               :DISPLAY
+219 :8169   (CE102E)    :         LDX     #SCSR
+220 :816C   (B6102E)    :         LDAA    SCSR
+221 :816F   (960E)      :         LDAA    U1
+222 :8171   (8B30)      :         ADDA    #$30
+223 :8173   (B7102F)    :         STAA    SCDR
+224 :8176               :T1
+225 :8176   (1F0080FC)  :         BRCLR   $00,X,#$80     T1
+226 :817A   (B6102E)    :         LDAA    SCSR
+227 :817D   (960F)      :         LDAA    U2
+228 :817F   (8B30)      :         ADDA    #$30
+229 :8181   (B7102F)    :         STAA    SCDR
+230 :8184               :T2
+231 :8184   (1F0080FC)  :         BRCLR   $00,X,#$80     T2
+232 :8188               :DSPLY
+233 :8188   (CE102E)    :         LDX     #SCSR
+234 :818B   (B6102E)    :         LDAA    SCSR
+235 :818E   (9610)      :         LDAA    U3
+236 :8190   (8B30)      :         ADDA    #$30
+237 :8192   (B7102F)    :         STAA    SCDR
+238 :8195               :T3
+239 :8195   (1F0080FC)  :         BRCLR   $00,X,#$80     T3
+240 :8199   (B6102E)    :         LDAA    SCSR
+241 :819C   (9611)      :         LDAA    U4
+242 :819E   (8B30)      :         ADDA    #$30
+243 :81A0   (B7102F)    :         STAA    SCDR
+244 :81A3               :T4
+245 :81A3   (1F0080FC)  :         BRCLR   $00,X,#$80     T4
+246 :81A7   (B6102E)    :         LDAA    SCSR
+247 :81AA   (9612)      :         LDAA    U5
+248 :81AC   (8B30)      :         ADDA    #$30
+249 :81AE   (B7102F)    :         STAA    SCDR
+250 :81B1               :T5
+251 :81B1   (1F0080FC)  :         BRCLR   $00,X,#$80     T5
+252 :81B5   (39)        :         RTS
+253 :81B6               :CRYTRN
+254 :81B6   (CE102E)    :         LDX     #SCSR
+255 :81B9   (B6102E)    :         LDAA    SCSR
+256 :81BC   (860A)      :         LDAA    #$0A
+257 :81BE   (B7102F)    :         STAA    SCDR
+258 :81C1               :CR1
+259 :81C1   (1F0080FC)  :         BRCLR   $00,X,#$80     CR1
+260 :81C5   (B6102E)    :         LDAA    SCSR
+261 :81C8   (860D)      :         LDAA    #$0D
+262 :81CA   (B7102F)    :         STAA    SCDR
+263 :81CD               :CR2
+264 :81CD   (1F0080FC)  :         BRCLR   $00,X,#$80     CR2
+265 :81D1   (39)        :         RTS
+266 :81D2               :DATARX
+267 :81D2   (CE102E)    :         LDX     #SCSR
+268 :81D5   (B6102E)    :         LDAA    SCSR
+269 :81D8   (960C)      :         LDAA    ORDEN
+270 :81DA   (B7102F)    :         STAA    SCDR
+271 :81DD               :DT1
+272 :81DD   (1F0080FC)  :         BRCLR   $00,X,#$80     DT1
+273 :81E1   (B6102E)    :         LDAA    SCSR
+274 :81E4   (863A)      :         LDAA    #$3A
+275 :81E6   (B7102F)    :         STAA    SCDR
+276 :81E9               :DT2
+277 :81E9   (1F0080FC)  :         BRCLR   $00,X,#$80     DT2
+278 :81ED   (39)        :         RTS
+279 :81EE               :VOLTA
+280 :81EE   (CE1030)    :         LDX     #ADCTL
+281 :81F1   (8680)      :         LDAA    #$80
+282 :81F3   (B71039)    :         STAA    OPTION
+283 :81F6   (8610)      :         LDAA    #$10
+284 :81F8   (B71030)    :         STAA    ADCTL
+285 :81FB               :E1
+286 :81FB   (1F0080FC)  :         BRCLR   $00,X,#$80     E1
+287 :81FF   (F61031)    :         LDAB    ADR1
+288 :8202   (D713)      :         STAB    V1
+289 :8204   (8680)      :         LDAA    #$80
+290 :8206   (B71039)    :         STAA    OPTION
+291 :8209   (8611)      :         LDAA    #$11
+292 :820B   (B71030)    :         STAA    ADCTL
+293 :820E               :E2
+294 :820E   (1F0080FC)  :         BRCLR   $00,X,#$80     E2
+295 :8212   (F61032)    :         LDAB    ADR2
+296 :8215   (D714)      :         STAB    V2
+297 :8217   (8612)      :         LDAA    #$12
+298 :8219   (B71030)    :         STAA    ADCTL
+299 :821C               :E3
+300 :821C   (1F0080FC)  :         BRCLR   $00,X,#$80     E3
+301 :8220   (F61033)    :         LDAB    ADR3
+302 :8223   (D71D)      :         STAB    V3
+303 :8225   (8613)      :         LDAA    #$13
+304 :8227   (B71030)    :         STAA    ADCTL
+305 :822A               :E4
+306 :822A   (1F0080FC)  :         BRCLR   $00,X,#$80     E4
+307 :822E   (F61034)    :         LDAB    ADR4
+308 :8231   (D71E)      :         STAB    V4
+309 :8233   (39)        :         RTS
+310 :8234               :BINBCD
+311 :8234   (CE2710)    :         LDX     #$2710
+312 :8237   (02)        :         IDIV
+313 :8238   (8F)        :         XGDX
+314 :8239   (D70E)      :         STAB    U1
+315 :823B   (8F)        :         XGDX
+316 :823C   (CE03E8)    :         LDX     #$3E8
+317 :823F   (02)        :         IDIV
+318 :8240   (8F)        :         XGDX
+319 :8241   (D70F)      :         STAB    U2
+320 :8243   (8F)        :         XGDX
+321 :8244               :BNBCD
+322 :8244   (CE64)      :         LDX     #$64
+323 :8246   (02)        :         IDIV
+324 :8247   (8F)        :         XGDX
+325 :8248   (D710)      :         STAB    U3
+326 :824A   (8F)        :         XGDX
+327 :824B   (CE000A)    :         LDX     #$A
+328 :824E   (02)        :         IDIV
+329 :824F   (8F)        :         XGDX
+330 :8250   (D711)      :         STAB    U4
+331 :8252   (8F)        :         XGDX
+332 :8253   (D712)      :         STAB    U5
+333 :8255   (39)        :         RTS
+334 :       F100        :         ORG     $F100
+335 :F100   (36)        :         PSHA
+336 :F101   (B6102E)    :         LDAA    SCSR
+337 :F104   (B6102F)    :         LDAA    SCDR
+338 :F107   (970C)      :         STAA    ORDEN
+339 :F109   (32)        :         PULA
+340 :F10A   (3B)        :         RTI
+341 :       F110        :         ORG     $F110
+342 :F110   (36)        :         PSHA
+343 :F111   (3C)        :         PSHX
+344 :F112   (CE1025)    :         LDX     #TFLG2
+345 :F115   (1C0040)    :         BSET    $00,X,#$40
+346 :F118   (7A18)      :         DEC     TEMPO
+347 :F11A   (2703)      :         BEQ     SEGUNDO
+348 :F11C   (32)        :         PULA
+349 :F11D   (38)        :         PULX
+350 :F11E   (3B)        :         RTI
+351 :F11F               :SEGUNDO
+352 :F11F   (86FF)      :         LDAA    #$FF
+353 :F121   (970D)      :         STAA    SEG
+354 :F123   (86F4)      :         LDAA    #$F4
+355 :F125   (9718)      :         STAA    TEMPO
+356 :F127   (7C1002)    :         INC     PORTG
+357 :F12A   (32)        :         PULA
+358 :F12B   (38)        :         PULX
+359 :F12C   (3B)        :         RTI
+360 :       FFD6        :         ORG     $FFD6
+361 :FFD6   (F100 )    :         fcb     $F1,$00
+362 :       FFF0        :         ORG     $FFF0
+363 :FFF0   (F110 )    :         FCB     $F1,$10
+364 :       FFFE        :         ORG     $FFFE
+365 :FFFE   (8000 )    :RESET    FCB     $80,$00
+366 :FFFF               :         END     $8000
+
+Tabla de Simbolos, total: 85
+	827E
+ADCTL	1030
+ADR1	1031
+ADR2	1032
+ADR3	1033
+ADR4	1034
+ALTO	0019
+BAJO	001A
+BASE_H	001B
+BASE_L	001C
+BAS_H	0015
+BAS_L	0016
+BAUD	102B
+BINBCD	8234
+BNBCD	8244
+C1	8164
+CHECA_T	8094
+CHECA_U2	8050
+CHECA_U3	8066
+CHECA_U4	807C
+CICLO	803D
+COMA	8159
+CR1	81C1
+CR2	81CD
+CRYTRN	81B6
+CSCTL	105D
+DATARX	81D2
+DDRA	1001
+DDRD	1009
+DDRG	1003
+DISPLAY	8169
+DSPLY	8188
+DT1	81DD
+DT2	81E9
+E1	81FB
+E2	820E
+E3	821C
+E4	822A
+ES_A	8077
+ES_R	808F
+ES_T	8061
+EXITO	80A5
+HPRIO	103C
+INICIA	80BC
+INICIO	8031
+MAIN	802E
+NO_S	8035
+NO_S1	8033
+OPT2	1038
+OPTION	1039
+ORDEN	000C
+OTRO	8039
+PACNT	1027
+PACTL	1026
+PORTA	1000
+PORTD	1008
+PORTE	100A
+PORTG	1002
+SACA	80EE
+SCCR1	102C
+SCCR2	102D
+SCDR	102F
+SCSR	102E
+SEG	000D
+SEGUNDO	8270
+SPCR	1028
+T1	8176
+T2	8184
+T3	8195
+T4	81A3
+T5	81B1
+TEMPO	0018
+TFLG2	1025
+TMSK2	1024
+U1	000E
+U2	000F
+U3	0010
+U4	0011
+U5	0012
+V1	0013
+V2	0014
+V3	001D
+V4	001E
+V5	0017
+VOLTA	81EE
